@@ -69,7 +69,7 @@
 									<span>Save</span>
 								</button>
 								<transition name="basic">
-									<div class="badge red mleft-xs" v-if="savedPalettes.includes('palette_' + paletteToSaveName)">
+									<div class="badge red mleft-xs" v-if="savedPalettesKeys && savedPalettesKeys.includes('palette_' + paletteToSaveName)">
 										<i class="far fa-code-branch"></i>
 										<span>Overwriting {{paletteToSaveName}}</span>
 									</div>
@@ -79,12 +79,12 @@
 							<div class="field mtop-sm">
 								<label>
 									Load a Saved Palette
-									<small v-if="!savedPalettes.length" class="block ptop-xs">You don't have any palettes saved yet</small>
+									<small v-if="!savedPalettes" class="block ptop-xs">You don't have any palettes saved yet</small>
 								</label>
 								<div class="saved-list">
-									<div class="saved-item" v-for="(name, index) in savedPalettes" :key="index">
-										<span @click="loadPalette(name)">{{name.substr(8)}}</span>
-										<i class="delete-saved-item far fa-times" @click.self.prevent="deletePalette(name)"></i>
+									<div class="saved-item" v-for="(val, index) in savedPalettes" :key="index">
+										<span @click="loadPalette(val.key, val.value)">{{val.key.substr(8)}}</span>
+										<i class="delete-saved-item far fa-times" @click.self.prevent="deletePalette(val.key)"></i>
 									</div>
 								</div>
 							</div>
@@ -284,6 +284,11 @@ import metaMixin from "@/components/mixins/metaMixin.js";
 // Components
 import Callout from "@/components/ui/Callout";
 
+import {Deta} from 'deta';
+
+const deta = Deta('PROJECT_KEY'); // replace
+const db = deta.Base('BASE_NAME'); // replace
+
 export default {
 	name: "ColorApp",
 
@@ -299,7 +304,8 @@ export default {
 		return {
 			selectedColor: 0,
 			// Save & Load
-			savedPalettes: [],
+			savedPalettes: null,
+			savedPalettesKeys: null,
 			paletteToSaveName: "",
 			hexStringTimer: null,
 			hexString: "",
@@ -589,15 +595,29 @@ export default {
 			// Get all saved palettes
 			// Loop through all local storage, save sttorage names of palettes
 			// Palettes begin with "palette_"
-			var values = [];
-			var keys = Object.keys(localStorage);
-			var i = keys.length;
-			while( i-- ){
-				if(keys[i].startsWith("palette_")){
-					values.push(keys[i]);
+
+			db.fetch().next().then(res => {
+				var values = [];
+
+				var keys = res.value;
+				var palettes = [];
+
+				var i = keys.length;
+				while( i-- ){
+
+					if(keys[i].key.startsWith("palette_")){
+					values.push(keys[i].key);
+					palettes.push(keys[i]);
+					}
+
 				}
-			}
-			this.savedPalettes = values;
+
+				// Save to data
+				this.savedPalettesKeys = values;
+
+				this.savedPalettes  = palettes;
+			});
+		
 		},
 		// Save
 		savePalette: function(){
@@ -606,22 +626,27 @@ export default {
 				hexString: this.hexString
 			}
 			var stringified = JSON.stringify(newPalette)
-			localStorage.setItem('palette_' + this.paletteToSaveName.replace(/\s/g, ''), stringified);
+			var name = 'palette_' + this.paletteToSaveName.replace(/\s/g, '');
+			console.info(newPalette);
+			db.put({key: name, value: newPalette});
+
 
 			this.toast("Palette Saved", "Your palette has been saved to your browser's local storage.", "", "fas fa-swatchbook");
 			// Hide tab
-			this.controlToggles.save = false;
+			this.controlToggles.save = true;
 		},
 		// Delete
 		deletePalette: function(name){
-			localStorage.removeItem(name);
+			db.delete(name);
+
 			this.toast("Palette Deleted", "Your palette has been deleted.", "", "fas fa-trash");
 			// Hide tab
 			this.controlToggles.save = false;
 		},
 		// Load
-		loadPalette: function(name){
-			var saved = localStorage.getItem(name);
+		loadPalette: function(name, palleteObject){
+
+			var saved = JSON.stringify(palleteObject);
 			var parsed = JSON.parse(saved)
 			this.hexString = parsed.hexString;
 

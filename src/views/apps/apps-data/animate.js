@@ -1,6 +1,11 @@
 // animate.js
 // Broke off data definitions for animate page because they are long
 
+function getCookieValue(a) {
+    var b = document.cookie.match('(^|;)\\s*' + a + '\\s*=\\s*([^;]+)');
+    return b ? b.pop() : '';
+}
+
 export default {
 	// Holds all css at each step
 	// Backdoor to reference to update computed property - not really actually used
@@ -39,6 +44,8 @@ export default {
 	animationToSaveName: null,
 	// Previously saved animations
 	savedAnimations: null,
+	savedAnimationsKeys: null,
+	projectKey: getCookieValue("pk"),
 	// Selected step position
 	currentStep: {
 		left: "0.0%",

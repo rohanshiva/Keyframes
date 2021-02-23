@@ -91,7 +91,7 @@
 								<span>Save</span>
 							</button>
 							<transition name="basic">
-								<div class="badge red mleft-xs" v-if="savedAnimations && savedAnimations.includes('animation_' + animationToSaveName)">
+								<div class="badge red mleft-xs" v-if="savedAnimationsKeys && savedAnimationsKeys.includes('animation_' + animationToSaveName)">
 									<i class="far fa-code-branch"></i>
 									<span>Overwriting "{{animationToSaveName}}"</span>
 								</div>
@@ -101,12 +101,12 @@
 						<div class="field mtop-xs">
 							<label>
 								Load a Saved Animation
-								<small v-if="!savedAnimations[0]" class="block">You don't have any saved animations yet</small>
+								<small v-if="!savedAnimations" class="block">You don't have any saved animations yet</small>
 							</label>
 							<div class="saved-list">
-								<div class="saved-item" v-for="(name, index) in savedAnimations" :key="index">
-									<span @click="loadAnimation(name)">{{name.substr(10)}}</span>
-									<i class="far fa-times delete-saved-item" @click.self.prevent="deleteAnimationFromStorage(name)"></i>
+								<div class="saved-item" v-for="(val, index) in savedAnimations" :key="index">
+									<span @click="loadAnimation(val.key, val.value)">{{val.key.substr(10)}}</span>
+									<i class="far fa-times delete-saved-item" @click.self.prevent="deleteAnimationFromStorage(val.key)"></i>
 								</div>
 							</div>
 						</div>
@@ -527,6 +527,9 @@ import shortcut, { PRIMARY, SHIFT } from "@/components/mixins/keyboardShortcutsM
 
 // Data broken into separate file because it was long
 import data from "@/views/apps/apps-data/animate.js";
+import {Deta} from 'deta';
+const deta = Deta('PROJECT_KEY');
+const db = deta.Base('BASE_NAME');
 
 export default {
 	
@@ -690,6 +693,8 @@ export default {
 			// Save step
 			this.saveStep();
 		},
+
+		
 
 		////////////////////////
 		// Step Functions
@@ -891,34 +896,44 @@ export default {
 				keyframes: this.keyframes,
 				animationProperties: this.animationProperties,
 			}
-			var stringified = JSON.stringify(animationData)
+			var stringified = JSON.stringify(animationData);
+			const name = 'animation_' + this.animationToSaveName.replace(/\s/g, '');
+			db.put({key: name, value: animationData});
 			localStorage.setItem('animation_' + this.animationToSaveName.replace(/\s/g, ''), stringified);
 
-			this.toast("Animation Saved", "Your animation has been saved into your browser's local storage.", "", "far fa-save");
+			this.toast("Animation Saved", "Your animation has been saved!.", "", "far fa-save");
 			this.options.saveLoad = false;
 		},
 		// Load saved
-		loadAllSaved: function(){
-			// Get all saved animations
-			// Loop through all local storage, save sttorage names of animattions
-			// Animations begin with "animation_"
-			var values = [];
-			var keys = Object.keys(localStorage);
+		loadAllSaved: async function(){
+			
+			var animations = [];
+			const values = [];
+			var keys = await db.fetch().next();
+
+			keys = keys.value;
+
 			var i = keys.length;
 			while( i-- ){
-				if(keys[i].startsWith("animation_")){
-					values.push(keys[i]);
+
+				if(keys[i].key.startsWith("animation_")){
+					values.push(keys[i].key);
+					animations.push(keys[i]);
 				}
 
 			}
 
-			this.savedAnimations = values;
+			// Save to data
+			this.savedAnimationsKeys= values;
+			this.savedAnimations = animations;	
+			console.log(this.projectKey)
 		},
 
 		// Load previously saved animation
-		loadAnimation: function(name){
-			var animation = localStorage.getItem(name);
+		loadAnimation: function(name, animationObject){
 
+			var animation  =JSON.stringify(animationObject);
+			var parsed = JSON.parse(animation)
 			var parsed = JSON.parse(animation)
 			this.keyframes = parsed.keyframes;
 			this.customTargetStyles = parsed.customTargetStyles;
@@ -933,7 +948,8 @@ export default {
 		},
 		// Delete saved animation
 		deleteAnimationFromStorage: function(name){
-			localStorage.removeItem(name);
+			db.delete(name);
+			
 			this.toast("Animation Deleted", name.substr(10) + " has been deleted from your saved animations.", "red", "far fa-trash-alt");
 			this.options.saveLoad = false;
 		},
