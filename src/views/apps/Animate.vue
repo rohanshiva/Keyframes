@@ -528,8 +528,13 @@ import shortcut, { PRIMARY, SHIFT } from "@/components/mixins/keyboardShortcutsM
 // Data broken into separate file because it was long
 import data from "@/views/apps/apps-data/animate.js";
 import {Deta} from 'deta';
-const deta = Deta('PROJECT_KEY');
-const db = deta.Base('BASE_NAME');
+
+function getCookieValue(a) {
+    var b = document.cookie.match('(^|;)\\s*' + a + '\\s*=\\s*([^;]+)');
+    return b ? b.pop() : '';
+}
+const deta = Deta(getCookieValue("pk"));
+const db = deta.Base('keyframes');
 
 export default {
 	
@@ -926,7 +931,6 @@ export default {
 			// Save to data
 			this.savedAnimationsKeys= values;
 			this.savedAnimations = animations;	
-			console.log(this.projectKey)
 		},
 
 		// Load previously saved animation

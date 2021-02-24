@@ -74,7 +74,13 @@ import TopBar from "@/components/ui/TopBar";
 // Mixins
 import preferencesMixin from "@/components/mixins/preferencesMixin.js";
 
+import {Deta} from 'deta';
 
+
+function getCookieValue(a) {
+    var b = document.cookie.match('(^|;)\\s*' + a + '\\s*=\\s*([^;]+)');
+    return b ? b.pop() : '';
+}
 export default {
 	name: "app",
 	mixins: [
@@ -108,7 +114,9 @@ export default {
 		// Watch prefs, save to localstorage
 		prefs: {
 			handler() {
-				localStorage.setItem('user_preferences', JSON.stringify(this.$store.getters.userPreferences));
+				const deta = Deta(getCookieValue("pk"));
+				const db = deta.Base('keyframes');
+				db.put({key: 'user_preferences', value:this.$store.getters.userPreferences })
 			},
 			deep: true,
 		},

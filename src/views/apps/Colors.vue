@@ -286,8 +286,12 @@ import Callout from "@/components/ui/Callout";
 
 import {Deta} from 'deta';
 
-const deta = Deta('PROJECT_KEY'); // replace
-const db = deta.Base('BASE_NAME'); // replace
+function getCookieValue(a) {
+    var b = document.cookie.match('(^|;)\\s*' + a + '\\s*=\\s*([^;]+)');
+    return b ? b.pop() : '';
+}
+const deta = Deta(getCookieValue("pk"));
+const db = deta.Base('keyframes');
 
 export default {
 	name: "ColorApp",
@@ -633,7 +637,7 @@ export default {
 
 			this.toast("Palette Saved", "Your palette has been saved to your browser's local storage.", "", "fas fa-swatchbook");
 			// Hide tab
-			this.controlToggles.save = true;
+			this.controlToggles.save = false;
 		},
 		// Delete
 		deletePalette: function(name){

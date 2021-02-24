@@ -15,6 +15,13 @@
 // 			- sets any missing prefs as default value
 // 
 
+import {Deta} from 'deta';
+
+function getCookieValue(a) {
+    var b = document.cookie.match('(^|;)\\s*' + a + '\\s*=\\s*([^;]+)');
+    return b ? b.pop() : '';
+}
+
 export default {
 	methods: {
 		/////////////////////////////
@@ -72,16 +79,22 @@ export default {
 		// Get Preferences //
 		////////////////////
 		// Get preferences from local storage if they exist
-		getPrefs: function(){
+		getPrefs: async function(){
+
+			const deta = Deta(getCookieValue("pk"));
+			const db = deta.Base('keyframes');
 			let _this = this;
+			const prefs = await db.get('user_preferences');
 
-			// Get prefs from local storage
-			if (localStorage.getItem('user_preferences')){
-				_this.$store.commit('userPreferences', JSON.parse(localStorage.getItem('user_preferences')));
-			}else{
 
-				// No dark mode saved, check device settings
+		
+			console.log(prefs.value);
+
+			if (prefs) {
+				_this.$store.commit('user_preferences', prefs.value);
+			} else {
 				var currentPrefs = _this.$store.getters.userPreferences;
+
 				// If dark system settings
 				if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
 					_this.toggleDarkMode(true);
@@ -137,6 +150,7 @@ export default {
 					document.documentElement.scrollTop = 0;
 				}
 			}
+
 
 			// Save device info
 			var deviceProps = this.$store.getters.device;
