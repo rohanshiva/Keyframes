@@ -903,7 +903,8 @@ export default {
 			}
 			var stringified = JSON.stringify(animationData);
 			const name = 'animation_' + this.animationToSaveName.replace(/\s/g, '');
-			db.put({key: name, value: animationData});
+			db.put({key:name, date:new Date(), customTargetCode: this.customTargetCode, customTargetStyles:this.customTargetStyles, keyframes: this.keyframes, animationProperties:this.animationProperties})
+			// db.put({key: name, value: animationData});
 			localStorage.setItem('animation_' + this.animationToSaveName.replace(/\s/g, ''), stringified);
 
 			this.toast("Animation Saved", "Your animation has been saved!.", "", "far fa-save");
@@ -923,7 +924,16 @@ export default {
 
 				if(keys[i].key.startsWith("animation_")){
 					values.push(keys[i].key);
-					animations.push(keys[i]);
+
+					var animationData = {
+						date: keys[i].date,
+						customTargetCode:  keys[i].customTargetCode,
+						customTargetStyles:  keys[i].customTargetStyles,
+						keyframes:  keys[i].keyframes,
+						animationProperties:  keys[i].animationProperties,
+					}
+					var saveObject = {key: keys[i].key,value :animationData}
+					animations.push(saveObject);
 				}
 
 			}

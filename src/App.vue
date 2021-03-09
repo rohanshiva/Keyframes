@@ -101,7 +101,7 @@ export default {
 	created: function () {
 		// Send initial track
 		_paq.push(['setCustomUrl', "/" ]);
-		_paq.push(['setDocumentTitle', "Home"]);
+		_paq.push(['setDocumentTitle', "Animation"]);
 		_paq.push(['trackPageView']);
 	},
 	computed: {

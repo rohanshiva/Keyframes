@@ -86,12 +86,9 @@ export default {
 			let _this = this;
 			const prefs = await db.get('user_preferences');
 
-
-		
-			console.log(prefs.value);
-
+			
 			if (prefs) {
-				_this.$store.commit('user_preferences', prefs.value);
+				_this.$store.commit('userPreferences', prefs.value);
 			} else {
 				var currentPrefs = _this.$store.getters.userPreferences;
 

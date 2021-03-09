@@ -1,7 +1,7 @@
 {
 	"name": "Keyframes.app",
 	"short_name": "Keyframes",
-	"start_url": "/",
+	"start_url": "",
 	"display": "standalone",
 	"background_color": "#110F1F",
 	"theme_color": "#110F1F",
@@ -21,23 +21,6 @@
   	],
 	  
   	"shortcuts": [
-		{
-			"name": "New Animation",
-			"short_name": "Animation",
-			"url": "/animate/",
-			"icons": [{
-				"src": "./img/icons/android-chrome-192x192.png",
-				"sizes": "192x192"
-			}]
-		},
-		{
-			"name": "Colors",
-			"short_name": "Colors",
-			"url": "/colors/",
-			"icons": [{
-				"src": "./img/icons/android-chrome-192x192.png",
-				"sizes": "192x192"
-			}]
-		}
+	
 	]
 }

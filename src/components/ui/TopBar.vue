@@ -54,39 +54,7 @@
 
 				<!-- App Switcher -->
 				<div class="settings-nav">
-					<div class="nav-dropdown" @click="toggleDropdown('apps')">
-						<!-- Hover label to show dropdown -->
-						<button class="hover-label">
-							<span>Apps</span>
-							<!-- Chevron down -->
-							<i v-bind:class="{'far fa-shapes': !showAppSwitcher, 'far fa-times-circle': showAppSwitcher}"></i>
-						</button>
-						<!-- Popup on hover/focus -->
-						<transition name="slide">
-							<div class="nav-popover" v-if="showAppSwitcher">
-								<!-- CSS Animations -->
-								<button class="popover-link" @click="navigate('/animate/')">
-									<span>Animations</span>
-									<i class="fas fa-stream"></i>
-								</button>
-								<!-- Colors -->
-								<button class="popover-link" @click="navigate('/colors/')">
-									<span>Colors</span>
-									<i class="fas fa-tint"></i>
-								</button>
-								<!-- CSS Shadows -->
-								<button class="popover-link" @click="navigate('/shadows/')">
-									<span>Shadows</span>
-									<i class="fas fa-eclipse"></i>
-								</button>
-								<!-- Charcter codes -->
-								<button class="popover-link" @click="navigate('/characters/')">
-									<span>Character Codes</span>
-									<i class="fas fa-tilde"></i>
-								</button>
-							</div>
-						</transition>
-					</div>
+					
 				</div>
 
 				<!-- Settings -->

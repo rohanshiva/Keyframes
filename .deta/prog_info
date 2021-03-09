@@ -1,0 +1,1 @@
+{"id":"8610a9f2-6754-45c0-8de8-0511c3a282a4","space":545,"runtime":"python3.7","name":"keyframes","path":"n86iwd","project":"b0o4lb5k","account":"144798365827","region":"eu-central-1","deps":["starlette","aiofiles"],"envs":null,"public":true,"log_level":"debug","cron":"","reload_deps":false}

@@ -56,84 +56,87 @@ const router = new Router({
 		// Home //
 		/////////
 		{
-			path: '/',
-			name: 'Home',
-			component: Home,
-		},
-		{
-			path: '/v2/',
-			name: 'PromoHome',
-			component: Home,
-		},
-		////////////
-		// About //
-		//////////
-		{
-			path: '/about/',
-			name: 'About',
-			component: About,
-		},
-		////////////////
-		// Changelog //
-		//////////////
-		{
-			path: '/changelog/',
-			name: 'Changelog',
-			component: Changelog,
-		},
-		///////////////
-		// Commands //
-		/////////////
-		{
-			path: '/commands/',
-			name: 'Commands',
-			component: Commands,
-		},
-
-		///////////
-		// Apps //
-		/////////
-		// Animate
-		{
-			path: '/animate/',
+			path: '*',
 			name: 'Animate',
 			component: Animate,
 			meta: {
 				help: true,
 			}
 		},
-		// Shadows
-		{
-			path: '/shadows/',
-			name: 'Shadows',
-			component: Shadows
-		},
-		// Colors
-		{
-			path: '/colors/',
-			name: 'Colors',
-			component: Colors
-		},
-		// Character Codes
-		{
-			path: '/characters/',
-			name: 'CharacterCodes',
-			component: CharacterCodes
-		},
-		//////////////////////
-		// Everything Else //
-		////////////////////
-		// 404
-		{
-			path: '/404',
-			name: 'Error404',
-			component: Error404
-		},
-		// If no match, redirect to 404
-		{
-			path: '*',
-			redirect: '/404'
-		}
+		// {
+		// 	path: '/v2/',
+		// 	name: 'PromoHome',
+		// 	component: Home,
+		// },
+		// ////////////
+		// // About //
+		// //////////
+		// {
+		// 	path: '/about/',
+		// 	name: 'About',
+		// 	component: About,
+		// },
+		// ////////////////
+		// // Changelog //
+		// //////////////
+		// {
+		// 	path: '/changelog/',
+		// 	name: 'Changelog',
+		// 	component: Changelog,
+		// },
+		// ///////////////
+		// // Commands //
+		// /////////////
+		// {
+		// 	path: '/commands/',
+		// 	name: 'Commands',
+		// 	component: Commands,
+		// },
+
+		// ///////////
+		// // Apps //
+		// /////////
+		// // Animate
+		// {
+		// 	path: '/animate/',
+		// 	name: 'Animate',
+		// 	component: Animate,
+		// 	meta: {
+		// 		help: true,
+		// 	}
+		// },
+		// // Shadows
+		// {
+		// 	path: '/shadows/',
+		// 	name: 'Shadows',
+		// 	component: Shadows
+		// },
+		// // Colors
+		// {
+		// 	path: '/colors/',
+		// 	name: 'Colors',
+		// 	component: Colors
+		// },
+		// // Character Codes
+		// {
+		// 	path: '/characters/',
+		// 	name: 'CharacterCodes',
+		// 	component: CharacterCodes
+		// },
+		// //////////////////////
+		// // Everything Else //
+		// ////////////////////
+		// // 404
+		// {
+		// 	path: '/404',
+		// 	name: 'Error404',
+		// 	component: Error404
+		// },
+		// // If no match, redirect to 404
+		// {
+		// 	path: '*',
+		// 	redirect: '/404'
+		// }
 	]
 });
 

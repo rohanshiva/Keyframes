@@ -42,21 +42,6 @@
 				<!-- General Preferences -->
 				<div class="settings-group">
 
-
-					<!-- Start Page Selector -->
-					<label class="setting-label-large">
-						Start Page
-						<small>Select the page you'd like to see first when you visit keyframes.app.</small>
-					</label>
-					<div class="custom-picker nowrap no-scrollbars mtop-xs mbottom-sm">
-						<label class="option" v-for="option in startPages" :key="option.label" :for="'cat_' + option.label" v-bind:class="{'active': $store.getters.userPreferences.startPage == option.path}">
-							<i :class="[option.icon]"></i>
-							<span>{{option.label}}</span>
-							<input type="radio" :id="'cat_' + option.label" v-model="$store.getters.userPreferences.startPage" v-bind:value="option.path" v-bind:aria-label="option.label + ' Page'" hidden/>
-						</label>
-					</div>
-
-
 					<!-- Dark Mode -->
 					<div class="setting-toggle">
 						<div class="setting-toggle-input">
@@ -102,50 +87,6 @@
 
 
 
-					<!-- Clear local storage -->
-					<div class="basic-field" id="clearLocalStorage">
-						<div class="field-body">
-							<button class="button red small" type="button" aria-label="Clear Local Storage" @click="clearLocalStorage()">
-								<span>Clear Local Storage</span>
-								<i class="far fa-trash-alt"></i>
-							</button>
-							<!-- Local storage help toggle -->
-							<button id="localStorageHelpButton" @click="viewLocalStorage();">
-								<span v-if="!showLocalStorageHelp">What's this?</span>
-								<span v-else>Hide</span>
-								<i v-bind:class="{'far fa-chevron-down': !showLocalStorageHelp, 'far fa-chevron-up': showLocalStorageHelp}"></i>
-							</button>
-						</div>
-					</div>
-
-					<!-- Paragraph explaining local storage -->
-					<transition name="basic">
-						<div id="localStorageHelp" v-if="showLocalStorageHelp" class="mtop-sm">
-							Instead of accounts, this site uses your browser's local storage to remember your preferences and data. Here's what that means:
-							<ul>
-								<li>Local Storage is basically a file in your browser that this website can use to temporarily save things.</li>
-								<li>Because it's saved <b>only</b> in the browser, if you visit this site on another device or browser, you won't have your preferences or data.</li>
-								<li>Anyone who visits this site on this device/browser will have access to the data, but...</li>
-								<li>We don't save anything private or personal in there. It's mainly for settings you toggle (like remembering if you prefer dark or light mode).</li>
-							</ul>
-							If you'd like to clear the local storage and reset this site to the default settings, click the button above.
-							<br/>
-							<b>Your local storage currently looks like this:</b>
-							<!-- Code block to show existing local storage -->
-							<div class="local-storage-code-display" v-if="localStorageString">
-								<code>
-									<!-- If empty -->
-									<span v-if="localStorageString == '[]'">
-										[Your Local Storage is empty]
-									</span>
-									<span v-else>
-										{{localStorageString}}
-									</span>
-								</code>
-							</div>
-							
-						</div>
-					</transition>
 
 					<div>&nbsp;</div>
 
@@ -187,29 +128,6 @@ export default {
 			localStorageString: null,
 			// Define potential start pages users can choose
 			test: null,
-			startPages: [
-				{
-					path: '/',
-					icon: 'fal fa-home',
-					label: 'Home'
-				},{
-					path: '/animate/',
-					icon: 'fal fa-video',
-					label: 'Animate'
-				},{
-					path: '/shadows/',
-					icon: 'fal fa-eclipse',
-					label: 'Shadows'
-				},{
-					path: '/colors/',
-					icon: 'fal fa-tint',
-					label: 'Colors'
-				},{
-					path: '/characters/',
-					icon: 'fal fa-tilde',
-					label: 'Characters'
-				}
-			]
 		};
 	},
 	mounted() {
@@ -219,45 +137,6 @@ export default {
 	},
 	methods: {
 		// Open local storage help and track action
-		viewLocalStorage: function(){
-			this.showLocalStorageHelp = !this.showLocalStorageHelp;
-			// _paq.push(['trackEvent', 'Action', 'View', 'Local Storage']);
-		},
-	
-		// Delete all items from local storage
-		clearLocalStorage: function(){
-			let _this = this;
-
-			// Track action
-			_paq.push(['trackEvent', 'Action', 'Function', 'Clear Local Storage']);
-
-			// Clear local storage
-			localStorage.clear();
-
-			// Toast
-			_this.toast("Local Storage Cleared", "Your data & preferences have been cleared from your browser's local storage.", "", "far fa-trash-alt");
-
-			// Close modal - this shows user an action,
-			// Also forcing them to open settings again shows accurate localstorage string
-			this.$emit('settingsModalClosed');
-		},
-		// This function returns all local storage data available
-		getAllLocalStorage: function(){
-
-			var values = [];
-			var keys = Object.keys(localStorage);
-			console.log(keys);
-			var i = keys.length;
-
-			while( i-- ){
-				var item = {}
-				item[keys[i]] = localStorage.getItem(keys[i])
-
-				values.push(item);
-			}
-
-			this.localStorageString = JSON.stringify(values).split('\\').join('');
-		}
 	}
 };
 </script>
